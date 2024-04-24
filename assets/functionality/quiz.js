@@ -1,322 +1,389 @@
 "use strict";
 
-//control buttons
-const btnStart = document.getElementById('btn-start');
-const showItemBtn = document.getElementById('next-item__btn');
-const finalBtn = document.getElementById('final-page__btn');
-const restartBtn = document.getElementById('restart-page__btn');
-const btnDiv = document.querySelector('.btn-div');
-//
+// //control buttons
+// const btnStart = document.getElementById('btn-start');
+// const showItemBtn = document.getElementById('next-item__btn');
+// const finalBtn = document.getElementById('final-page__btn');
+// const restartBtn = document.getElementById('restart-page__btn');
+// const btnDiv = document.querySelector('.btn-div');
+// //
 
-//selectors
-const topicSelector = document.querySelector('select[name="topic"]');
-const difficultySelector = document.querySelector('select[name="difficulty"]');
-const itemSelector = document.querySelector('input[name="item"]');
-const timerSelector = document.querySelector('input[name="timer"]');
-//
+// //selectors
+// const topicSelector = document.querySelector('select[name="topic"]');
+// const difficultySelector = document.querySelector('select[name="difficulty"]');
+// const itemSelector = document.querySelector('input[name="item"]');
+// const timerSelector = document.querySelector('input[name="timer"]');
+// //
 
-const mainDiv = document.getElementById('main');
+// const mainDiv = document.getElementById('main');
 //
-let quizInfo = [],i=0,answer ='',topic,difficulty,item =5,timer=10,
+let quizInfo = [], i=1,answer ='',
 answerItems,timeResultVal,resultItemArray =[],resultItem,quizItemDivs
+
+
+let modificationObject = {
+    topic: "",
+    difficulty: "",
+    item: 0,
+    timer: 0
+}
+
 //
-//default
-const conditionForAnswerItem = new Array(4).fill('quiz-item__answer')
-itemSelector.value = item;
-timerSelector.value = timer;
-document.querySelector('.item-value').textContent = item;
-document.querySelector('.timer-value').textContent = timer;
-//
-topicSelector.addEventListener('change',(e)=>{
-    confirmingToStart(e.target.value);
-    topic = e.target.value;
-    configRequest(topic,difficulty,item,timer);
-})
+// //default
+// const conditionForAnswerItem = new Array(4).fill('quiz-item__answer')
+// itemSelector.value = item;
+// timerSelector.value = timer;
+// document.querySelector('.item-value').textContent = item;
+// document.querySelector('.timer-value').textContent = timer;
 
-difficultySelector.addEventListener('change',(e)=>{
-    confirmingToStart(e.target.value);
-    difficulty = e.target.value;
-    configRequest(topic,difficulty,item,timer);
-})
+//window DOMcontent loader
 
-itemSelector.addEventListener('input',(e)=>{
-    confirmingToStart(e.target.value);
-    item = e.target.value;
-    document.querySelector('.item-value').textContent = e.target.value;
-    configRequest(topic,difficulty,item,timer);
-})
+window.addEventListener("DOMContentLoaded",createWelcomePage);
 
-timerSelector.addEventListener('input',(e)=>{
-    confirmingToStart(e.target.value);
-    timer = e.target.value;
-    document.querySelector('.timer-value').textContent = e.target.value;
-    configRequest(topic,difficulty,item,timer);
-})
+function createWelcomePage(){
+    //main body
+    const mainBodyEl = document.createElement("main");
+    //create the header
+    const headerEl = document.createElement("div"); 
+    headerEl.textContent = "Welcome to Trivia Game";
+    headerEl.className = "quiz-title";
+    //array of category choices
+    const categoriesArr = [
+    {
+        value: "",
+        textValue: "",   
+        }
+    ,{
+     value: "geography",
+     textValue: "Geography",   
+    },
+    {
+    value: "history",
+    textValue: "History",   
+    },
+    {
+    value: "science",
+    textValue: "Science",   
+    },
+    {
+    value: "music",
+    textValue: "Music",   
+    },
+    {
+    value: "sport_and_leisure",
+    textValue: "Sport and Leisure",   
+    },
+    {
+    value: "film_and_tv",
+    textValue: "Film and TV",   
+    },
+    {
+    value: "arts_and_literature",
+    textValue: "Arts and Literature",   
+    },
+    {
+    value: "society_and_culture",
+    textValue: "Society and Culture",   
+    },
+    {
+    value: "food_and_drink",
+    textValue: "Food and Drink",   
+    },
+    {
+    value: "general_knowledge",
+    textValue: "General Knowledge"
+    }
+    ]
+
+    //arr for difficulty options
+    const difficultyArr = [
+        {value: "",
+    textValue: ""},
+    {value: "easy",
+    textValue: "Easy"},
+    {value: "medium",
+    textValue: "Medium"},
+    {value: "hard",
+    textValue: "Hard"}
+    ]
+
+    //container element for the modifications
+    const quizModificationEl = document.createElement("div");
+    quizModificationEl.className = "quiz-modification";
+
+    //container for topic selection part
+    const quizModificationTopicEl = document.createElement("div");
+    quizModificationTopicEl.className = "quiz-modification__container";
+
+    
+    //label for topic
+    const topicLabelEl = document.createElement("label");
+    topicLabelEl.setAttribute("for", "topic");
+    topicLabelEl.textContent = "Topic"
+
+    //select el for topic selections
+    const topicSelectEl = document.createElement("select");
+    topicSelectEl.setAttribute("name", "topic");
 
 
-function configRequest(a,b,c,d){
+    quizModificationTopicEl.appendChild(topicLabelEl);
+
+    categoriesArr.forEach(val=>{
+        const optionEl = document.createElement("option");
+    
+        optionEl.value = val.value;
+        optionEl.textContent = val.textValue;
+
+        topicSelectEl.appendChild(optionEl);
+    })
+    quizModificationTopicEl.appendChild(topicSelectEl);
+
+    // This section is to generate difficulty option
+
+    const quizModificationDifficultyEl =document.createElement("div");
+    quizModificationDifficultyEl.className = "quiz-modification__container";
+    const difficultyLabelEl = document.createElement("label");
+    difficultyLabelEl.setAttribute("for", "difficulty");
+    difficultyLabelEl.textContent = "Difficulty";
+
+    quizModificationDifficultyEl.appendChild(difficultyLabelEl);
+
+    const difficultySelectEl = document.createElement("select");
+    difficultySelectEl.setAttribute("name","difficulty");
+
+    difficultyArr.forEach(val=>{
+        const optionEl = document.createElement("option");
+    
+        optionEl.value = val.value;
+        optionEl.textContent = val.textValue;
+
+        difficultySelectEl.appendChild(optionEl);
+    })
+
+    quizModificationDifficultyEl.appendChild(difficultySelectEl);
+
+    // This is for inserting item length
+
+    const quizModificationItemEl = document.createElement("div");
+    quizModificationItemEl.className = "quiz-modification__container";
+
+    const itemLabelEl = document.createElement("label");
+    itemLabelEl.setAttribute("for","item");
+    itemLabelEl.textContent = "Number of Items";
+
+    const itemRangeEl = document.createElement("input");
+    itemRangeEl.setAttribute("name", "item");
+    itemRangeEl.setAttribute("type","range");
+    itemRangeEl.setAttribute("min", "0");
+    itemRangeEl.setAttribute("max", "20");
+    itemRangeEl.setAttribute("step", "5");
+   itemRangeEl.value = 0;
+    quizModificationItemEl.appendChild(itemLabelEl);
+    quizModificationItemEl.appendChild(itemRangeEl);
+
+    //this is for inserting timer 
+
+    const quizModificationTimerEl = document.createElement("div");
+    quizModificationTimerEl.className = "quiz-modification__container";
+    const timerLabelEl = document.createElement("label");
+    timerLabelEl.setAttribute("for","timer");
+    timerLabelEl.textContent = "Timer";
+
+    const timerRangeEl = document.createElement("input");
+
+    timerRangeEl.setAttribute("name", "timer");
+    timerRangeEl.setAttribute("type","range");
+    timerRangeEl.setAttribute("min", "0");
+    timerRangeEl.setAttribute("max", "20");
+    timerRangeEl.setAttribute("step", "5");
+  
+    timerRangeEl.value = 0;
+    quizModificationTimerEl.appendChild(timerLabelEl);
+    quizModificationTimerEl.appendChild(timerRangeEl);
+
+    //this is inserting button
+
+    const quizModificationButtonEl = document.createElement("div");
+    quizModificationButtonEl.className = "quiz-modification__container";
+
+    const btnStart = document.createElement("button");
+    btnStart.setAttribute("id","btn-start");
+    btnStart.textContent = "Start Quiz";
+    btnStart.disabled = true;
+
+    quizModificationButtonEl.appendChild(btnStart);
+
+
+    quizModificationEl.appendChild(headerEl);
+
+    quizModificationEl.appendChild(quizModificationTopicEl);
+
+    quizModificationEl.appendChild(quizModificationDifficultyEl);
+
+    quizModificationEl.appendChild(quizModificationItemEl);
+
+    quizModificationEl.appendChild(quizModificationTimerEl);
+
+    quizModificationEl.appendChild(quizModificationButtonEl);
+    //append the mainbodyel
+    mainBodyEl.appendChild(quizModificationEl);
+
+    ////listen to modification change
+    topicSelectEl.addEventListener("change",modificationFuncHandler);
+    difficultySelectEl.addEventListener("change",modificationFuncHandler);
+    itemRangeEl.addEventListener("input",modificationFuncHandler);
+    timerRangeEl.addEventListener("input",modificationFuncHandler);
+    document.querySelector("body").append(mainBodyEl);
+
+    btnStart.addEventListener("click",()=>{
+        quizData(modificationObject);
+    });
+}
+
+
+
+function modificationFuncHandler(e) {
+    
+    if(e.target.name === 'topic') {
+        modificationObject.topic = e.target.value
+    }else if(e.target.name === 'difficulty') {
+        modificationObject.difficulty = e.target.value
+    }else if (e.target.name === 'item'){
+        modificationObject.item = e.target.value;
+    }else if(e.target.name === 'timer') {
+
+        modificationObject.timer = e.target.value
+    }
+    //    confirmingToStart(e.target.value);
+    configRequest(modificationObject);
+}
+
+
+function configRequest(objMod){
+    const {topic:a,difficulty:b,item:c,timer:d} = objMod;
+
+    const btnStart = document.querySelector("#btn-start");
+
     if(a === '' || b === '' || c==='' || Number(c) < 5 ||
      Number(d) ===0 || a === undefined || b === undefined) {
-        btnStart.disabled= true;
+
+       btnStart.disabled = true;
         return;
     }
 
-    btnStart.disabled=false;
-    quizData(a,b,c)
+    else if(a && b && Number(c) > 0 && Number(d) > 0){
+        btnStart.disabled = false;
+    }else {
+        btnStart.disabled = true;
+    }
 }
+async function quizData(objSetup) {
 
-function confirmingToStart(val) {
-    if( val === '') btnStart.disabled = true;
-}
+    const {topic:topicVal,difficulty:difficultyVal,item:itemVal} = objSetup;
 
-async function quizData(topicVal,difficultyVal,itemVal) {
     try{
-        await fetch(`https://the-trivia-api.com/api/questions?categories=${topicVal}&limit=${itemVal}&region=PH&difficulty=${difficultyVal}`)
-       .then(response => response.json())
-       .then(data => {
-       quizInfo = data
-       });
+      let result=  await fetch(`https://the-trivia-api.com/api/questions?categories=${topicVal}&limit=${itemVal}&region=PH&difficulty=${difficultyVal}`);
+
+      if(!result.ok){
+        return;
+      }
+
+      quizInfo = await result.json();
+
+      //createQuizPage(quizInfo);
+      startGameFuncHandler(quizInfo);
     }
     catch(error) {
-        if(error) quizData()
+
     }
   
 }
 
-async function showItem(){
-    document.querySelector('.timer-indicator').textContent = timer;
-    showItemBtn.disabled = true;
-    pushedValArray(resultItem);
+function startGameFuncHandler(arr){
+   if(arr.length === 0) return;
+   const mainEl = document.querySelector("main");
+   mainEl.innerHTML = "";
 
-    if(i === 4) {
-        showItemBtn.textContent = "Finish Quiz";
-    }
+   const quizWrapperHeader = document.createElement("div");
+   const totalItems = document.createElement("div");
+   totalItems.textContent = arr.length;
 
-    if(i === 5) {
-        document.querySelector('.quiz-item__header').classList.add('hide');
-        document.querySelectorAll('.quiz-item')
-        .forEach(val => val.remove())
-        toggleButtonsFinalPage();
-    
-        return;
-    };
-    
-    const newQuizItem = await quizInfo;
-    const answerSet = newQuizItem[i].incorrectAnswers.concat([newQuizItem[i].correctAnswer]).sort();    
-    timerHandler(timer);
-    enteredElementsForQuiz(i,newQuizItem,answerSet)
-    
-    const divQUiz = document.querySelectorAll('.quiz-item');
-    
-    pickAnswer(divQUiz,i,newQuizItem[i].correctAnswer,newQuizItem[i].question);
-    
-    i++;
-    itemIndicatorHandler(i,newQuizItem.length);
+   const answeredItems = document.createElement("div");
+    answeredItems.textContent = 0;
 
-    answerItems.forEach(val => val.className = 'quiz-item__answer')
+   const chosenTimer = document.createElement("div");
+   chosenTimer.textContent = modificationObject.timer;
+
+   quizWrapperHeader.appendChild(totalItems);
+   quizWrapperHeader.appendChild(answeredItems);
+   quizWrapperHeader.appendChild(chosenTimer);
+
+   mainEl.appendChild(quizWrapperHeader);
+   const quizItemsWrapper = document.createElement("div");
+    quizItemsWrapper.className = "quiz-items__wrapper";
+
+    mainEl.appendChild(quizItemsWrapper);
+    
+   arr.forEach((val,i)=>createQuizItem(val,i));
+   changeQuizItem(i);
 }
 
-function showItemHandler() {
-    window.localStorage.clear()
-    mainDiv.classList.add('hide')
-    showItemBtn.classList.toggle('hide');
-    btnStart.classList.toggle('hide');
-    
-    const headerElementFormat = `
-    <div class="row justify-content-around align-items-center quiz-item__header">
-        <p class="item-indicator col-auto"></p>
-        <p class="timer-indicator col-auto"></p>
-    </div>
-    `
+function createQuizItem(arrItem,i) {
 
-    const headerParent = creatingElement('div');
-    headerParent.classList.add('container','col-8')
-    headerParent.insertAdjacentHTML('afterbegin',headerElementFormat);
-    appendBody(headerParent);
+    const quizItemsWrapper = document.querySelector(".quiz-items__wrapper");
+    const quizItemEl = document.createElement("div");
+    quizItemEl.dataset.id =i + 1; 
+    quizItemEl.className="quiz-item__el";
+    const quizMainHeader = document.createElement("div");
 
-    showItem();
-}
+    const questionEl = document.createElement("div");
+    questionEl.textContent = arrItem.question;
+    const timerEl = document.createElement("div");
+    timerEl.textContent = modificationObject.timer;
 
+    quizMainHeader.appendChild(questionEl);
+    quizMainHeader.appendChild(timerEl);
+    quizItemEl.appendChild(quizMainHeader);
+    const answerSet = arrItem.incorrectAnswers.concat([arrItem.correctAnswer]).sort();
 
-function enteredElementsForQuiz(tabId,pulledDataQuiz,pulledAnswerSet){
-    const quizDiv = creatingElement('div');
-    quizDiv.classList.add('quiz-item','p-4','col-8','mx-auto')
-    quizDiv.dataset.tab = tabId;
-
-    const quizAnswerlist = creatingElement('ul');
-    const questionTxt = creatingElement('h3');
-
-    quizAnswerlist.className = 'quiz-item__answer-list';
-
-    let txt = document.createTextNode(`${pulledDataQuiz[tabId].question}`)
-    questionTxt.appendChild(txt);
-    
-    quizDiv.appendChild(questionTxt);
-    quizDiv.appendChild(quizAnswerlist);
-    appendBody(quizDiv);
-
-    for (let a = 0; a < pulledAnswerSet.length; a++) {
-        let answerItem = creatingElement('li');
-       answerItem.textContent += pulledAnswerSet[a];
-       answerItem.dataset.tab = a;
-        quizAnswerlist.appendChild(answerItem);
-    }
-}
-
-function pickAnswer(divItem,itemNo,correctAnswer,itemQuestion) {
-    divItem.forEach(val => val.classList.add('hide'));
-    divItem[itemNo].classList.remove('hide');
-
-    answerItems = divItem[itemNo].querySelectorAll('li');
- 
-    let storeConfirmAnswer = {
-        answerKey: itemNo +1,
-        question: itemQuestion,
-        confirmAnswer: false,
-        answerContext:'',
-        correctAnswer: correctAnswer
-    }
-    
-    answerItems.forEach((val,i)=>{
-       val.addEventListener('click',()=>{
-
-        if(timeResultVal ===0) return;
-        let confirmAnswer = val.textContent === correctAnswer;
-
-        const copyConditionForAnswerItem = conditionForAnswerItem.map((value,index) => {
-        return index === i ? 'quiz-item__answer-picked' : 'quiz-item__answer'
-        })
-
-        answerItems.forEach((val,indexVal) => val.className = copyConditionForAnswerItem[indexVal])
-
-        storeConfirmAnswer = {
-            answerKey: itemNo +1,
-            question: itemQuestion,
-            confirmAnswer: confirmAnswer,
-            answerContext:val.textContent,
-            correctAnswer: correctAnswer
-        }
-        return resultItem = storeConfirmAnswer
+    answerSet.forEach(val=>{
+        const quizAnswerItem = document.createElement("div");
+       
+        quizAnswerItem.textContent = val;
         
-       })
-    })
-
-    return resultItem = storeConfirmAnswer
-
-}
-
-
-function timerHandler(timerVal) {
-    
-    const timerFunc = setInterval(()=>{
-        --timerVal
-        document.querySelector('.timer-indicator').textContent = timerVal;
-    
-        if(timerVal ===0) {
-    
-            showItemBtn.disabled = false;
-            clearInterval(timerFunc);
-        };
-        return timeResultVal = timerVal
-
-     },1000)
-
-}
-
-
-function finalPageHandler() {
-
-    const finalScore = resultItemArray.filter(val => val.confirmAnswer === true)
-
-    const resultBody = creatingElement('div');
-    resultBody.className = 'result-body container mx-auto col-lg-10 px-3 py-4 justify-content-center';
-    
-    const arrayForItemScore = resultItemArray.map(val =>
-         val.confirmAnswer=== true ? 'correct-item' : 'incorrect-item');
-
-    let i = resultItemArray.length;
-    while(i >0 ) {
-        i--
-        let resultContent = `
-           <div>
-           <hr>
-            <h5 class="${arrayForItemScore[i]}">Item No: ${resultItemArray[i].answerKey}</h5>
-            <p>Question: ${resultItemArray[i].question}</p>
-            <p>Your Answer: ${resultItemArray[i].answerContext}</p>
-            <p>Correct Answer: ${resultItemArray[i].correctAnswer}</p> 
-           </div> 
-        `
-        
-        resultBody.insertAdjacentHTML('afterbegin',resultContent)
-    }   
-
-    const scoreContainer = `
-    <div class='mx-auto score-container text-center'>
-        <h5> Your score: ${finalScore.length} / ${resultItemArray.length} </h5>
-    </div>`
-
-    resultBody.insertAdjacentHTML('afterbegin',scoreContainer)
-    appendBody(resultBody);
-}
-
-
-function restartPageHandler() {
-    resultItemArray.length = 0;
-    resultItemArray = [];
-    resultItem = '';
-    toggleButtonsHide();
+        quizItemEl.appendChild(quizAnswerItem);
    
-   if( document.querySelector('.result-body') ) {
-    document.querySelector('.result-body').remove();
-   }
-    document.querySelector('.quiz-item__header').remove();
-    mainDiv.classList.remove('hide');
-    showItemBtn.textContent = "Show Item";
- 
-    configRequest(topic,difficulty,item,timer);
 
-    showItemBtn.disabled = false;
-    i = 0;
+    })
+    const submitBtn = document.createElement("button");
+    submitBtn.setAttribute("type","button");
+    submitBtn.textContent = "Next";
+   
+    quizItemEl.appendChild(submitBtn);
+    submitBtn.addEventListener("click",(e)=>{
+        console.log(e)
+        i++;
+        changeQuizItem(i);
+    })
+    quizItemsWrapper.appendChild(quizItemEl);
+    
 }
 
-function toggleButtonsFinalPage() {
-    showItemBtn.classList.toggle('hide');
-    finalBtn.classList.toggle('hide');
-    restartBtn.classList.toggle('hide');
-}
 
-function toggleButtonsHide() {
-    btnStart.classList.toggle('hide');
-    finalBtn.classList.toggle('hide');
-    restartBtn.classList.toggle('hide');
+function changeQuizItem(index){
+    if(index === 5 ) return;
+    document.querySelectorAll(".quiz-item__el").forEach(val=>{
+        if(index !== 1) {
+            val.classList.remove("covered-item");
+            const multipliedRem =index === 1 ? ((index -1) + 1.25) * -7.5  :
+            ((index -1) + 1.25) * -7.5 - (index * 1.5);
+    
+            val.style.transform = `translateY(${multipliedRem}rem)`;
+            val.style.transition = "transform 2s ease-in";
+        }
+    
+        // if(Number(val.dataset.id) !== index) {
+        //     val.classList.add("covered-item");
+        // }
+    })
 }
-
-//appending elements to the body
-function appendBody(val) {
-    document.body.appendChild(val);
-}
-
-//itemIndicator
-function itemIndicatorHandler(a,b) {
-    document.querySelector('.item-indicator').textContent = `${a} ${'of'} ${b} ${'Questions'}`;
- } 
-
- //array for results after the quiz
-function pushedValArray(item) {
-    if(item === undefined ||item === ''||item ==={}) return;
-    resultItemArray.push(item);
-}
-
-//appending the header of the quizitem
-function appendHeader(val) {
-    document.querySelector('quiz-item').body.appendChild(val);
-}
-//building an element to serve in the html body
-function creatingElement(val) {
-    return document.createElement(val);
-}
-
-btnStart.addEventListener('click',showItemHandler);
-showItemBtn.addEventListener('click',showItem);
-finalBtn.addEventListener('click',finalPageHandler);
-restartBtn.addEventListener('click',restartPageHandler)

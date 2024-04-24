@@ -1,14 +1,26 @@
-@use '../../abstract/compilerfile';
-#main {
-    margin: 8rem auto 0 auto;
-    background-color: #2C3333;
-    color: #CBE4DE;
+@use '../../abstract/compilerfile' as *;
+main {
+    width: 65rem;
+    min-width: 65rem;
+    height: 32.5rem;
+    min-height:32.5rem;
+    margin: 1.5rem auto 0 auto;
+
+
+    .quiz-title {
+        text-align: center;
+        padding: .75rem;
+        font-size: $header;
+        font-weight: 700;
+        border-bottom: .05rem solid black;
+
+    }
+
+    .quiz-modification__container {
+        margin: 1.25rem 0 0 0 ;
+    }
 }
 
-#main >div {
-    padding: 1rem .75rem;
-}
+label {
 
-.hide {
-    display: none;
 }

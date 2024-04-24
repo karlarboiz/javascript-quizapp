@@ -1,6 +1,8 @@
+@use "./abstract/compilerfile" as *;
+
 body {
     margin: 0 0;
     padding: 0 0;
-    background-color: #CBE4DE;
+    background-image: linear-gradient(to right, $secondary, $primary);
     font-family: 'Golos Text', sans-serif;
 }
