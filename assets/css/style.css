@@ -10809,10 +10809,9 @@ main {
 
 .quiz-items__wrapper {
   position: absolute;
-  height: 30rem;
+  height: 20rem;
   width: 100%;
   overflow: hidden;
-  background-color: #000000;
 }
 
 .quiz-item__el {

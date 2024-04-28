@@ -1,24 +1,8 @@
 "use strict";
 
-// //control buttons
-// const btnStart = document.getElementById('btn-start');
-// const showItemBtn = document.getElementById('next-item__btn');
-// const finalBtn = document.getElementById('final-page__btn');
-// const restartBtn = document.getElementById('restart-page__btn');
-// const btnDiv = document.querySelector('.btn-div');
-// //
-
-// //selectors
-// const topicSelector = document.querySelector('select[name="topic"]');
-// const difficultySelector = document.querySelector('select[name="difficulty"]');
-// const itemSelector = document.querySelector('input[name="item"]');
-// const timerSelector = document.querySelector('input[name="timer"]');
-// //
-
-// const mainDiv = document.getElementById('main');
-//
-let quizInfo = [], i=1,answer ='',
-answerItems,timeResultVal,resultItemArray =[],resultItem,quizItemDivs
+let quizInfo = [], i=0,answer ='',
+answeredItems = 0,timeResultVal,resultItemArray =[],
+resultItem,quizItemDivs,timerCount = 0;
 
 
 let modificationObject = {
@@ -28,15 +12,7 @@ let modificationObject = {
     timer: 0
 }
 
-//
-// //default
-// const conditionForAnswerItem = new Array(4).fill('quiz-item__answer')
-// itemSelector.value = item;
-// timerSelector.value = timer;
-// document.querySelector('.item-value').textContent = item;
-// document.querySelector('.timer-value').textContent = timer;
 
-//window DOMcontent loader
 
 window.addEventListener("DOMContentLoaded",createWelcomePage);
 
@@ -238,6 +214,8 @@ function createWelcomePage(){
     btnStart.addEventListener("click",()=>{
         quizData(modificationObject);
     });
+
+    
 }
 
 
@@ -289,8 +267,6 @@ async function quizData(objSetup) {
       }
 
       quizInfo = await result.json();
-
-      //createQuizPage(quizInfo);
       startGameFuncHandler(quizInfo);
     }
     catch(error) {
@@ -309,7 +285,7 @@ function startGameFuncHandler(arr){
    totalItems.textContent = arr.length;
 
    const answeredItems = document.createElement("div");
-    answeredItems.textContent = 0;
+    answeredItems.textContent = i + 1;
 
    const chosenTimer = document.createElement("div");
    chosenTimer.textContent = modificationObject.timer;
@@ -324,12 +300,12 @@ function startGameFuncHandler(arr){
 
     mainEl.appendChild(quizItemsWrapper);
     
-   arr.forEach((val,i)=>createQuizItem(val,i));
-   changeQuizItem(i);
+  createQuizItem(arr[i],i);
 }
 
 function createQuizItem(arrItem,i) {
-
+    doSomething(Number(modificationObject.timer));
+    let clickCount = 0;
     const quizItemsWrapper = document.querySelector(".quiz-items__wrapper");
     const quizItemEl = document.createElement("div");
     quizItemEl.dataset.id =i + 1; 
@@ -339,51 +315,144 @@ function createQuizItem(arrItem,i) {
     const questionEl = document.createElement("div");
     questionEl.textContent = arrItem.question;
     const timerEl = document.createElement("div");
-    timerEl.textContent = modificationObject.timer;
+    timerTexContent(timerEl, Number(modificationObject.timer))
+
 
     quizMainHeader.appendChild(questionEl);
     quizMainHeader.appendChild(timerEl);
     quizItemEl.appendChild(quizMainHeader);
     const answerSet = arrItem.incorrectAnswers.concat([arrItem.correctAnswer]).sort();
 
+    let answeredItemObj= new Object();
+    
+    answeredItemObj.id = i + 1;
+    answeredItemObj.question = arrItem.question
+    answeredItemObj.isCorrect = false;
+    answeredItemObj.myAnswer = "";
+    answeredItemObj.correctAnswer = arrItem.correctAnswer;
+    
     answerSet.forEach(val=>{
         const quizAnswerItem = document.createElement("div");
-       
+    
         quizAnswerItem.textContent = val;
+
+        quizAnswerItem.addEventListener("click",(e)=>{
+
+            if(timerCount <= 0) return;
+            selectAnswerFunc(answeredItemObj,arrItem,resultItemArray,e.target.textContent)
+        })
         
         quizItemEl.appendChild(quizAnswerItem);
-   
 
+       
     })
+
+    quizTimer(answeredItemObj,resultItemArray,Number(modificationObject.timer));
     const submitBtn = document.createElement("button");
+    nextBtnActivation(submitBtn,Number(modificationObject.timer),clickCount);
     submitBtn.setAttribute("type","button");
-    submitBtn.textContent = "Next";
+    submitBtn.textContent = i === quizInfo.length -1 ? "Check Quiz": "Next";
    
     quizItemEl.appendChild(submitBtn);
-    submitBtn.addEventListener("click",(e)=>{
-        console.log(e)
-        i++;
-        changeQuizItem(i);
-    })
+
+    submitBtn.addEventListener("click",changeItems)
     quizItemsWrapper.appendChild(quizItemEl);
     
 }
 
-
-function changeQuizItem(index){
-    if(index === 5 ) return;
-    document.querySelectorAll(".quiz-item__el").forEach(val=>{
-        if(index !== 1) {
-            val.classList.remove("covered-item");
-            const multipliedRem =index === 1 ? ((index -1) + 1.25) * -7.5  :
-            ((index -1) + 1.25) * -7.5 - (index * 1.5);
+function changeItems(){
+    if(i !== 4) {
+        i++;
+  
+        return startGameFuncHandler(quizInfo);
+    }else {
+        console.log(resultItemArray.filter(val => val));
+    }
     
-            val.style.transform = `translateY(${multipliedRem}rem)`;
-            val.style.transition = "transform 2s ease-in";
-        }
-    
-        // if(Number(val.dataset.id) !== index) {
-        //     val.classList.add("covered-item");
-        // }
-    })
 }
+
+let count = 0;
+
+function doSomething(n) {
+    if(n === 0) {
+
+      return;
+    }
+    
+   setTimeout(() => {
+    doSomething(n - 1)
+   
+   }, 1000);
+
+   timerCount = n;
+}
+
+function timerTexContent(targetEl,timeCount){
+    targetEl.textContent = timeCount;
+    var timer = setInterval(function(){
+        targetEl.textContent = timeCount;
+        timeCount--;
+        if (timeCount < 0) {
+            clearInterval(timer);
+        }
+    }, 1000);   
+}
+
+function quizTimer(obj,arr,timeCount){
+   
+    var timer = setInterval(function(){
+        timeCount--;
+        if (timeCount < 0) {
+            arr.push(obj);
+            clearInterval(timer);
+        }
+    }, 1000);
+}
+
+function nextBtnActivation(nextBtn,timeCount,clickCount){
+  
+    nextBtn.disabled = clickCount ===0;
+    var timer = setInterval(function(){
+        timeCount--;
+        if (timeCount < 0) {
+            nextBtn.disabled = false
+            clearInterval(timer);
+        }
+    }, 1000);
+
+    
+}
+
+
+function selectAnswerFunc(obj,arr,resultArr,playerAnswer){
+    let answeredItem = resultArr.filter(val=>val?.id === i+1);
+    obj.id = i + 1;
+    obj.question = arr.question
+    obj.isCorrect = playerAnswer === arr.correctAnswer;
+
+    obj.myAnswer = playerAnswer;
+
+    obj.correctAnswer =  arr.correctAnswer;
+
+   
+    if(!answeredItem){
+        
+        resultArr.push(obj)
+        
+    }else {
+        answeredItem.isCorrect = playerAnswer === arr.correctAnswer;
+        answeredItem.myAnswer = playerAnswer;
+        answeredItem.correctAnswer = arr.correctAnswer;
+
+        arr[answeredItem?.id] = answeredItem;
+
+    }
+
+   
+}
+
+
+
+
+
+ 

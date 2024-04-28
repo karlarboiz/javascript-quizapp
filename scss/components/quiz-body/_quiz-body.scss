@@ -5,11 +5,10 @@ main {
 
 .quiz-items__wrapper {
     position: absolute;
-    height: 30rem;
+    height: 20rem;
     width: 100%;
     overflow: hidden;
-    background-color: #000000;
-    
+
 }   
 
 
@@ -31,27 +30,10 @@ main {
 }
 
 
-// .covered-item {
-//     position: relative;
-//     // animation: moveUp .5s ease-in;
-//     // ::before {
-//     //     content: '';
-//     //     display: block;
-//     //     width: 100%;
-//     //     height: 100%;
-//     //     background-color: #000000;
-//     //     top: 0;
-//     //     left: 0;
-
-//     // }
-// }
-
 .move-item {
     animation: moveUpDisappear .5s ease-in;
     display: none;
 }
-
-
 
 @keyframes moveUp {
     to {
