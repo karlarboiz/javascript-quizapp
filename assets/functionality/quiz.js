@@ -1,9 +1,8 @@
 "use strict";
 
-let quizInfo = [], i=0,answer ='',
-answeredItems = 0,timeResultVal,resultItemArray =[],
-resultItem,quizItemDivs,timerCount = 0;
-
+let quizInfo = [],i=0,
+answeredItems = 0,resultItemArray =[],
+timerCount = 0;
 
 let modificationObject = {
     topic: "",
@@ -12,11 +11,13 @@ let modificationObject = {
     timer: 0
 }
 
-
-
 window.addEventListener("DOMContentLoaded",createWelcomePage);
 
 function createWelcomePage(){
+    document.querySelector("body").innerHTML = "";
+    quizInfo = [];
+    resultItemArray = [];
+    i=0;
     //main body
     const mainBodyEl = document.createElement("main");
     //create the header
@@ -219,7 +220,6 @@ function createWelcomePage(){
 }
 
 
-
 function modificationFuncHandler(e) {
     
     if(e.target.name === 'topic') {
@@ -231,6 +231,7 @@ function modificationFuncHandler(e) {
     }else if(e.target.name === 'timer') {
 
         modificationObject.timer = e.target.value
+        timerCount = Number(e.target.value)
     }
     //    confirmingToStart(e.target.value);
     configRequest(modificationObject);
@@ -304,8 +305,10 @@ function startGameFuncHandler(arr){
 }
 
 function createQuizItem(arrItem,i) {
-    doSomething(Number(modificationObject.timer));
-    let clickCount = 0;
+    let cloneTimerValue = Number(modificationObject.timer);
+    timerCount = Number(modificationObject.timer);
+    doSomething(cloneTimerValue);
+  
     const quizItemsWrapper = document.querySelector(".quiz-items__wrapper");
     const quizItemEl = document.createElement("div");
     quizItemEl.dataset.id =i + 1; 
@@ -315,7 +318,7 @@ function createQuizItem(arrItem,i) {
     const questionEl = document.createElement("div");
     questionEl.textContent = arrItem.question;
     const timerEl = document.createElement("div");
-    timerTexContent(timerEl, Number(modificationObject.timer))
+    timerTexContent(timerEl, cloneTimerValue)
 
 
     quizMainHeader.appendChild(questionEl);
@@ -330,16 +333,20 @@ function createQuizItem(arrItem,i) {
     answeredItemObj.isCorrect = false;
     answeredItemObj.myAnswer = "";
     answeredItemObj.correctAnswer = arrItem.correctAnswer;
-    
+    answeredItemObj.loggedTime = 0;
+
     answerSet.forEach(val=>{
         const quizAnswerItem = document.createElement("div");
     
-        quizAnswerItem.textContent = val;
+            quizAnswerItem.textContent = val;
 
         quizAnswerItem.addEventListener("click",(e)=>{
-
+          
             if(timerCount <= 0) return;
-            selectAnswerFunc(answeredItemObj,arrItem,resultItemArray,e.target.textContent)
+        
+            answeredItemObj.loggedTime = timerCount;
+            selectAnswerFunc(answeredItemObj,arrItem,resultItemArray,e.target.textContent);
+        
         })
         
         quizItemEl.appendChild(quizAnswerItem);
@@ -347,31 +354,12 @@ function createQuizItem(arrItem,i) {
        
     })
 
-    quizTimer(answeredItemObj,resultItemArray,Number(modificationObject.timer));
-    const submitBtn = document.createElement("button");
-    nextBtnActivation(submitBtn,Number(modificationObject.timer),clickCount);
-    submitBtn.setAttribute("type","button");
-    submitBtn.textContent = i === quizInfo.length -1 ? "Check Quiz": "Next";
-   
-    quizItemEl.appendChild(submitBtn);
-
-    submitBtn.addEventListener("click",changeItems)
+    quizTimer(answeredItemObj,resultItemArray,cloneTimerValue);
+    
     quizItemsWrapper.appendChild(quizItemEl);
     
 }
 
-function changeItems(){
-    if(i !== 4) {
-        i++;
-  
-        return startGameFuncHandler(quizInfo);
-    }else {
-        console.log(resultItemArray.filter(val => val));
-    }
-    
-}
-
-let count = 0;
 
 function doSomething(n) {
     if(n === 0) {
@@ -392,49 +380,36 @@ function timerTexContent(targetEl,timeCount){
     var timer = setInterval(function(){
         targetEl.textContent = timeCount;
         timeCount--;
-        if (timeCount < 0) {
+        if (timeCount < 0 || quizInfo.length === i) {
             clearInterval(timer);
         }
     }, 1000);   
 }
 
 function quizTimer(obj,arr,timeCount){
+
+    if(quizInfo.length=== i) return;
    
     var timer = setInterval(function(){
         timeCount--;
         if (timeCount < 0) {
             arr.push(obj);
+            changeItems();
             clearInterval(timer);
         }
     }, 1000);
 }
 
-function nextBtnActivation(nextBtn,timeCount,clickCount){
-  
-    nextBtn.disabled = clickCount ===0;
-    var timer = setInterval(function(){
-        timeCount--;
-        if (timeCount < 0) {
-            nextBtn.disabled = false
-            clearInterval(timer);
-        }
-    }, 1000);
-
-    
-}
 
 
 function selectAnswerFunc(obj,arr,resultArr,playerAnswer){
+   
     let answeredItem = resultArr.filter(val=>val?.id === i+1);
     obj.id = i + 1;
     obj.question = arr.question
     obj.isCorrect = playerAnswer === arr.correctAnswer;
-
     obj.myAnswer = playerAnswer;
-
     obj.correctAnswer =  arr.correctAnswer;
-
-   
     if(!answeredItem){
         
         resultArr.push(obj)
@@ -447,8 +422,75 @@ function selectAnswerFunc(obj,arr,resultArr,playerAnswer){
         arr[answeredItem?.id] = answeredItem;
 
     }
+}
 
-   
+function changeItems(){
+    i++;
+    if(i <= quizInfo.length - 1) {
+    
+        return startGameFuncHandler(quizInfo);
+    }else {
+     
+        const mainEl = document.querySelector("main");
+        mainEl.innerHTML = "";
+
+        const resultHeader = document.createElement("div");
+
+        const resultTitle = document.createElement("div");
+
+        resultTitle.textContent = "Results";
+
+        const restartGameBtn = document.createElement("button");
+        const restartGameBtnIcon = document.createElement("span");
+        const restartGameBtnSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2z"/>
+        <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466"/>
+      </svg>`;
+      restartGameBtnIcon.innerHTML = restartGameBtnSVG;
+
+        restartGameBtn.textContent = "Restart Game";
+        restartGameBtn.append(restartGameBtnIcon);
+        restartGameBtn.addEventListener("click",createWelcomePage);
+
+        
+        const score = document.createElement("div");
+        const totalCorrectItems = resultItemArray.filter(val=>val.isCorrect);
+        score.textContent = `${totalCorrectItems.length}/ ${resultItemArray.length}`
+        resultHeader.append(resultTitle);
+        resultHeader.append(restartGameBtn);
+        resultHeader.append(score);
+        mainEl.append(resultHeader);
+
+        const resultBody = document.createElement("div");
+
+
+        for(const item of resultItemArray) {
+            const resultItem = document.createElement("div");
+
+            const questionItem = document.createElement("div");
+
+            questionItem.textContent = "Question: "+ item.question;
+
+            const myAnswer = document.createElement("div");
+
+            myAnswer.textContent= "Your Answer: " + item.myAnswer;
+
+            const correctAnswer = document.createElement("div");
+
+            correctAnswer.textContent = "Correct Answer: " + item.correctAnswer;
+
+            resultItem.appendChild(questionItem);
+
+            resultItem.appendChild(myAnswer);
+
+            resultItem.appendChild(correctAnswer);
+
+            resultBody.appendChild(resultItem);
+        }
+
+        mainEl.append(resultBody);  
+    }
+    
 }
 
 
