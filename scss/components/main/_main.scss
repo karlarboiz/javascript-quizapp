@@ -1,26 +1,46 @@
 @use '../../abstract/compilerfile' as *;
+.quiz-title {
+    text-align: center;
+    padding: .75rem;
+    font-size: $header;
+    font-weight: 700;
+    border-bottom: .05rem solid black;
+    max-width: max-content;
+    text-wrap: wrap;
+    margin: 0 auto;
+
+    max-width: 60rem;
+    line-height: 2rem;
+}
+
 main {
     width: 65rem;
-    min-width: 65rem;
+    max-width: 65rem;
     height: 32.5rem;
     min-height:32.5rem;
     margin: 1.5rem auto 0 auto;
 
 
-    .quiz-title {
-        text-align: center;
-        padding: .75rem;
-        font-size: $header;
-        font-weight: 700;
-        border-bottom: .05rem solid black;
-
-    }
+    
 
     .quiz-modification__container {
         margin: 1.25rem 0 0 0 ;
     }
+
+    .topic-choices__container {
+        width: 100%;
+        display: grid;
+        gap: .5rem;
+        grid-auto-flow: column;
+        grid-auto-columns: 20%;
+
+        overflow: auto;
+        overscroll-behavior-inline: contain;
+
+        &-sub {
+            padding: .5rem;
+            height: 7rem;
+        }
+    }
 }
 
-label {
-
-}

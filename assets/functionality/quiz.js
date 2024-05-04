@@ -25,12 +25,7 @@ function createWelcomePage(){
     headerEl.textContent = "Welcome to Trivia Game";
     headerEl.className = "quiz-title";
     //array of category choices
-    const categoriesArr = [
-    {
-        value: "",
-        textValue: "",   
-        }
-    ,{
+    const categoriesArr = [{
      value: "geography",
      textValue: "Geography",   
     },
@@ -74,8 +69,6 @@ function createWelcomePage(){
 
     //arr for difficulty options
     const difficultyArr = [
-        {value: "",
-    textValue: ""},
     {value: "easy",
     textValue: "Easy"},
     {value: "medium",
@@ -99,21 +92,34 @@ function createWelcomePage(){
     topicLabelEl.textContent = "Topic"
 
     //select el for topic selections
-    const topicSelectEl = document.createElement("select");
-    topicSelectEl.setAttribute("name", "topic");
-
-
+  
+    const topicCheckBoxes = document.createElement("div");
+    topicCheckBoxes.className = "topic-choices__container"
     quizModificationTopicEl.appendChild(topicLabelEl);
 
-    categoriesArr.forEach(val=>{
-        const optionEl = document.createElement("option");
-    
-        optionEl.value = val.value;
-        optionEl.textContent = val.textValue;
+    categoriesArr.forEach((val,i)=>{
 
-        topicSelectEl.appendChild(optionEl);
+
+        const topicCheckBoxContainer =document.createElement("div");
+        topicCheckBoxContainer.className = `topic-checkbox__container-${i} topic-choices__container-sub`;
+
+        const topicCheckBox = document.createElement("input");
+        topicCheckBox.setAttribute("type","checkbox");
+        topicCheckBox.setAttribute("id",val.value);
+        topicCheckBox.setAttribute("name","topic");
+        topicCheckBox.value= val.value;
+        topicCheckBox.addEventListener("change",modificationFuncHandler);
+
+        const topicCheckBoxLabel = document.createElement("label");
+        topicCheckBoxLabel.setAttribute("for",val.value);
+        topicCheckBoxLabel.textContent = val.textValue;
+        topicCheckBoxContainer.appendChild(topicCheckBox);
+        topicCheckBoxContainer.appendChild(topicCheckBoxLabel);
+
+        topicCheckBoxes.appendChild(topicCheckBoxContainer);
     })
-    quizModificationTopicEl.appendChild(topicSelectEl);
+  
+    quizModificationTopicEl.appendChild(topicCheckBoxes);
 
     // This section is to generate difficulty option
 
@@ -127,18 +133,31 @@ function createWelcomePage(){
 
     const difficultySelectEl = document.createElement("select");
     difficultySelectEl.setAttribute("name","difficulty");
+    const difficultyRadios = document.createElement("div");
+    difficultyRadios.className = "difficulty-choices__container";
+    difficultyArr.forEach((val,i)=>{
 
-    difficultyArr.forEach(val=>{
-        const optionEl = document.createElement("option");
-    
-        optionEl.value = val.value;
-        optionEl.textContent = val.textValue;
+        const difficultyRadioContainer= document.createElement("div");
+        difficultyRadioContainer.className = "difficulty-radio__container-"+i;
+        const difficultyRadio = document.createElement("input");
+        difficultyRadio.setAttribute("type","radio");
+        difficultyRadio.setAttribute("id",val.value);
+        difficultyRadio.setAttribute("name","difficulty");
+        difficultyRadio.value = val.value;
+        difficultyRadio.checked = val.value === modificationObject.difficulty;
+        difficultyRadio.addEventListener("change",modificationFuncHandler);
 
-        difficultySelectEl.appendChild(optionEl);
+        const difficultyRadioLabel = document.createElement("label");
+        difficultyRadioLabel.setAttribute("for",val.value);
+        difficultyRadioLabel.textContent = val.textValue;
+        
+        difficultyRadioContainer.appendChild(difficultyRadio);
+        difficultyRadioContainer.appendChild(difficultyRadioLabel)
+        
+
+        difficultyRadios.appendChild(difficultyRadioContainer);
     })
-
-    quizModificationDifficultyEl.appendChild(difficultySelectEl);
-
+    quizModificationDifficultyEl.appendChild(difficultyRadios);
     // This is for inserting item length
 
     const quizModificationItemEl = document.createElement("div");
@@ -154,7 +173,7 @@ function createWelcomePage(){
     itemRangeEl.setAttribute("min", "0");
     itemRangeEl.setAttribute("max", "20");
     itemRangeEl.setAttribute("step", "5");
-   itemRangeEl.value = 0;
+    itemRangeEl.value = modificationObject.item;
     quizModificationItemEl.appendChild(itemLabelEl);
     quizModificationItemEl.appendChild(itemRangeEl);
 
@@ -171,10 +190,10 @@ function createWelcomePage(){
     timerRangeEl.setAttribute("name", "timer");
     timerRangeEl.setAttribute("type","range");
     timerRangeEl.setAttribute("min", "0");
-    timerRangeEl.setAttribute("max", "20");
+    timerRangeEl.setAttribute("max", "15");
     timerRangeEl.setAttribute("step", "5");
   
-    timerRangeEl.value = 0;
+    timerRangeEl.value = modificationObject.timer;
     quizModificationTimerEl.appendChild(timerLabelEl);
     quizModificationTimerEl.appendChild(timerRangeEl);
 
@@ -190,8 +209,7 @@ function createWelcomePage(){
 
     quizModificationButtonEl.appendChild(btnStart);
 
-
-    quizModificationEl.appendChild(headerEl);
+    document.querySelector("body").append(headerEl);
 
     quizModificationEl.appendChild(quizModificationTopicEl);
 
@@ -206,8 +224,6 @@ function createWelcomePage(){
     mainBodyEl.appendChild(quizModificationEl);
 
     ////listen to modification change
-    topicSelectEl.addEventListener("change",modificationFuncHandler);
-    difficultySelectEl.addEventListener("change",modificationFuncHandler);
     itemRangeEl.addEventListener("input",modificationFuncHandler);
     timerRangeEl.addEventListener("input",modificationFuncHandler);
     document.querySelector("body").append(mainBodyEl);
@@ -218,12 +234,21 @@ function createWelcomePage(){
 
     
 }
-
-
+let topicArr = [];
 function modificationFuncHandler(e) {
     
     if(e.target.name === 'topic') {
-        modificationObject.topic = e.target.value
+        let topicsSummed = "";
+        if(e.target.checked) {
+            topicArr.push(e.target.value);
+        }else {
+
+            let filteredTopicArr = topicArr.filter(val=>val!==e.target.value)
+
+            topicArr = filteredTopicArr;
+        }
+        topicsSummed+= topicArr.join(",");
+        modificationObject.topic = topicsSummed;
     }else if(e.target.name === 'difficulty') {
         modificationObject.difficulty = e.target.value
     }else if (e.target.name === 'item'){
@@ -236,7 +261,6 @@ function modificationFuncHandler(e) {
     //    confirmingToStart(e.target.value);
     configRequest(modificationObject);
 }
-
 
 function configRequest(objMod){
     const {topic:a,difficulty:b,item:c,timer:d} = objMod;
@@ -282,14 +306,44 @@ function startGameFuncHandler(arr){
    mainEl.innerHTML = "";
 
    const quizWrapperHeader = document.createElement("div");
+
    const totalItems = document.createElement("div");
-   totalItems.textContent = arr.length;
+   const totalItemsSpanIcon = document.createElement("span");
+   const totalItemsSpanText = document.createElement("span");
+   totalItemsSpanIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-ol" viewBox="0 0 16 16">
+   <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5"/>
+   <path d="M1.713 11.865v-.474H2c.217 0 .363-.137.363-.317 0-.185-.158-.31-.361-.31-.223 0-.367.152-.373.31h-.59c.016-.467.373-.787.986-.787.588-.002.954.291.957.703a.595.595 0 0 1-.492.594v.033a.615.615 0 0 1 .569.631c.003.533-.502.8-1.051.8-.656 0-1-.37-1.008-.794h.582c.008.178.186.306.422.309.254 0 .424-.145.422-.35-.002-.195-.155-.348-.414-.348h-.3zm-.004-4.699h-.604v-.035c0-.408.295-.844.958-.844.583 0 .96.326.96.756 0 .389-.257.617-.476.848l-.537.572v.03h1.054V9H1.143v-.395l.957-.99c.138-.142.293-.304.293-.508 0-.18-.147-.32-.342-.32a.33.33 0 0 0-.342.338zM2.564 5h-.635V2.924h-.031l-.598.42v-.567l.629-.443h.635z"/>
+ </svg>`
+   
+    totalItemsSpanText.textContent = arr.length;
+    totalItems.append(totalItemsSpanIcon);
+    totalItems.append(totalItemsSpanText);
+    totalItems.className = "quiz-sub__header";
+
 
    const answeredItems = document.createElement("div");
-    answeredItems.textContent = i + 1;
+   const answeredItemsSpanIcon = document.createElement("span");
+   const answeredItemsSpanText = document.createElement("span");
+   answeredItemsSpanIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-checklist" viewBox="0 0 16 16">
+   <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z"/>
+   <path d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0M7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0"/>
+ </svg>`
+   answeredItemsSpanText.textContent = i + 1;
+   answeredItems.append(answeredItemsSpanIcon);
+   answeredItems.append(answeredItemsSpanText);
+   answeredItems.className = "quiz-sub__header";
 
    const chosenTimer = document.createElement("div");
-   chosenTimer.textContent = modificationObject.timer;
+   const chosenTimerSpanIcon = document.createElement("span");
+   const chosenTimerSpanText = document.createElement("span");
+   chosenTimerSpanIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
+   <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+   <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
+ </svg>`;
+ chosenTimerSpanText.textContent = modificationObject.timer;
+   chosenTimer.append(chosenTimerSpanIcon);
+   chosenTimer.append(chosenTimerSpanText);
+   chosenTimer.className = "quiz-sub__header";
 
    quizWrapperHeader.appendChild(totalItems);
    quizWrapperHeader.appendChild(answeredItems);
@@ -307,7 +361,7 @@ function startGameFuncHandler(arr){
 function createQuizItem(arrItem,i) {
     let cloneTimerValue = Number(modificationObject.timer);
     timerCount = Number(modificationObject.timer);
-    doSomething(cloneTimerValue);
+  
   
     const quizItemsWrapper = document.querySelector(".quiz-items__wrapper");
     const quizItemEl = document.createElement("div");
@@ -317,10 +371,12 @@ function createQuizItem(arrItem,i) {
 
     const questionEl = document.createElement("div");
     questionEl.textContent = arrItem.question;
+    const categoryEl = document.createElement("span");
+    categoryEl.textContent = arrItem.category;
     const timerEl = document.createElement("div");
     timerTexContent(timerEl, cloneTimerValue)
 
-
+    questionEl.appendChild(categoryEl);
     quizMainHeader.appendChild(questionEl);
     quizMainHeader.appendChild(timerEl);
     quizItemEl.appendChild(quizMainHeader);
@@ -341,10 +397,8 @@ function createQuizItem(arrItem,i) {
             quizAnswerItem.textContent = val;
 
         quizAnswerItem.addEventListener("click",(e)=>{
-          
-            if(timerCount <= 0) return;
         
-            answeredItemObj.loggedTime = timerCount;
+            answeredItemObj.loggedTime = Math.floor(new Date().getTime());
             selectAnswerFunc(answeredItemObj,arrItem,resultItemArray,e.target.textContent);
         
         })
@@ -360,20 +414,6 @@ function createQuizItem(arrItem,i) {
     
 }
 
-
-function doSomething(n) {
-    if(n === 0) {
-
-      return;
-    }
-    
-   setTimeout(() => {
-    doSomething(n - 1)
-   
-   }, 1000);
-
-   timerCount = n;
-}
 
 function timerTexContent(targetEl,timeCount){
     targetEl.textContent = timeCount;
@@ -446,7 +486,7 @@ function changeItems(){
         <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2z"/>
         <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466"/>
       </svg>`;
-      restartGameBtnIcon.innerHTML = restartGameBtnSVG;
+        restartGameBtnIcon.innerHTML = restartGameBtnSVG;
 
         restartGameBtn.textContent = "Restart Game";
         restartGameBtn.append(restartGameBtnIcon);
