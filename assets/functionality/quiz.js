@@ -44,7 +44,7 @@ function createWelcomePage(){
     {
     value: "sport_and_leisure",
     textValue: "Sport and Leisure",   
-    },
+    }, 
     {
     value: "film_and_tv",
     textValue: "Film and TV",   
