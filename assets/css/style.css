@@ -10809,7 +10809,6 @@ main .quiz-modification__container {
   margin: 1.25rem 0 0 0;
 }
 main .topic-choices__container {
-  width: 100%;
   display: grid;
   gap: 0.5rem;
   grid-auto-flow: column;
@@ -10818,6 +10817,16 @@ main .topic-choices__container {
   overscroll-behavior-inline: contain;
 }
 main .topic-choices__container-sub {
+  padding: 0.5rem;
+  height: 7rem;
+}
+main .difficulty-radios__container {
+  display: grid;
+  gap: 0.5rem;
+  grid-auto-flow: column;
+  grid-auto-columns: 32%;
+}
+main .difficulty-radios__container-sub {
   padding: 0.5rem;
   height: 7rem;
 }

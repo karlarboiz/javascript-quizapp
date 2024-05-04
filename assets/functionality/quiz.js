@@ -2,7 +2,7 @@
 
 let quizInfo = [],i=0,
 answeredItems = 0,resultItemArray =[],
-timerCount = 0;
+timerCount = 0,topicArr = [];
 
 let modificationObject = {
     topic: "",
@@ -108,6 +108,7 @@ function createWelcomePage(){
         topicCheckBox.setAttribute("id",val.value);
         topicCheckBox.setAttribute("name","topic");
         topicCheckBox.value= val.value;
+       
         topicCheckBox.addEventListener("change",modificationFuncHandler);
 
         const topicCheckBoxLabel = document.createElement("label");
@@ -117,6 +118,8 @@ function createWelcomePage(){
         topicCheckBoxContainer.appendChild(topicCheckBoxLabel);
 
         topicCheckBoxes.appendChild(topicCheckBoxContainer);
+
+
     })
   
     quizModificationTopicEl.appendChild(topicCheckBoxes);
@@ -134,11 +137,11 @@ function createWelcomePage(){
     const difficultySelectEl = document.createElement("select");
     difficultySelectEl.setAttribute("name","difficulty");
     const difficultyRadios = document.createElement("div");
-    difficultyRadios.className = "difficulty-choices__container";
+    difficultyRadios.className = "difficulty-radios__container";
     difficultyArr.forEach((val,i)=>{
 
         const difficultyRadioContainer= document.createElement("div");
-        difficultyRadioContainer.className = "difficulty-radio__container-"+i;
+        difficultyRadioContainer.className = `difficulty-radios__container-${i} difficulty-radios__container-sub`;
         const difficultyRadio = document.createElement("input");
         difficultyRadio.setAttribute("type","radio");
         difficultyRadio.setAttribute("id",val.value);
@@ -205,7 +208,7 @@ function createWelcomePage(){
     const btnStart = document.createElement("button");
     btnStart.setAttribute("id","btn-start");
     btnStart.textContent = "Start Quiz";
-    btnStart.disabled = true;
+
 
     quizModificationButtonEl.appendChild(btnStart);
 
@@ -232,9 +235,9 @@ function createWelcomePage(){
         quizData(modificationObject);
     });
 
-    
+    configRequest(modificationObject);
 }
-let topicArr = [];
+
 function modificationFuncHandler(e) {
     
     if(e.target.name === 'topic') {
@@ -247,13 +250,15 @@ function modificationFuncHandler(e) {
 
             topicArr = filteredTopicArr;
         }
+
         topicsSummed+= topicArr.join(",");
-        modificationObject.topic = topicsSummed;
+        
+        modificationObject.topic = (topicArr.length <= 5)? topicsSummed: "";
     }else if(e.target.name === 'difficulty') {
         modificationObject.difficulty = e.target.value
     }else if (e.target.name === 'item'){
         modificationObject.item = e.target.value;
-    }else if(e.target.name === 'timer') {
+    }else {
 
         modificationObject.timer = e.target.value
         timerCount = Number(e.target.value)
