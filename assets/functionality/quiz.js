@@ -424,7 +424,7 @@ function createQuizItem(arrItem,i) {
     answeredItemObj.myAnswer = "";
     answeredItemObj.correctAnswer = arrItem.correctAnswer;
     answeredItemObj.loggedTime = 0;
-
+    answeredItemObj.category = arrItem.category;
     answerSet.forEach(val=>{
         const quizAnswerItem = document.createElement("div");
         
@@ -485,6 +485,7 @@ function selectAnswerFunc(obj,arr,resultArr,playerAnswer){
     obj.isCorrect = playerAnswer === arr.correctAnswer;
     obj.myAnswer = playerAnswer;
     obj.correctAnswer =  arr.correctAnswer;
+
     if(!answeredItem){
         
         resultArr.push(obj)
