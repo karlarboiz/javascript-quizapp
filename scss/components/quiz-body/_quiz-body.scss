@@ -1,1 +1,75 @@
+@use '../../abstract/compilerfile' as *;
+
+.quiz-main__header {
+    --_spacing: .5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+
+    padding: calc(var(--_spacing) * .5);
+    &-sub {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        
+        svg {
+            height: calc($common * 1.5);
+            width: calc($common * 1.5);
+       
+        }
+    }
+
+}
+
+.quiz-indicator__svg {
+    border-radius: 50%;
+    margin: 0 .75rem;
+  
+    padding: .5rem;
+}
+
+
+.quiz-items__wrapper {
+    margin: 1.25rem 0 0 0;
+}
+
+.quiz-item__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.question {
+    text-align: center;
+    margin: 1.25rem 0  ;
+    font-size: $subheader;
+}
+
+.quiz-answers {
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    &__item {
+        width: 40%;
+        height: 10rem;
+        text-align: center;
+        
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-overflow: ellipsis;
+
+        /* From https://css.glass */
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: .5rem;
+        box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+}
+
+
 

@@ -10910,21 +10910,89 @@ main .difficulty-radios__container-sub input[type=radio] {
   height: var(--_input-choice__size);
 }
 
-.result-body {
-  background-color: #2C3333;
-  color: #CBE4DE;
+.quiz-main__header {
+  --_spacing: .5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: calc(var(--_spacing) * 0.5);
+}
+.quiz-main__header-sub {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.quiz-main__header-sub svg {
+  height: 1.575rem;
+  width: 1.575rem;
 }
 
-.incorrect-item {
-  background-color: red;
-  color: aliceblue;
-  padding: 0.35rem 0.5rem;
+.quiz-indicator__svg {
+  border-radius: 50%;
+  margin: 0 0.75rem;
+  padding: 0.5rem;
 }
 
-.correct-item {
-  background-color: green;
-  color: aliceblue;
-  padding: 0.35rem 0.5rem;
+.quiz-items__wrapper {
+  margin: 1.25rem 0 0 0;
+}
+
+.quiz-item__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.question {
+  text-align: center;
+  margin: 1.25rem 0;
+  font-size: 1.25rem;
+}
+
+.quiz-answers {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.quiz-answers__item {
+  width: 40%;
+  height: 10rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-overflow: ellipsis;
+  /* From https://css.glass */
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 0.25rem;
+}
+
+.result-body__item {
+  width: 75%;
+  margin: 0 auto;
+  padding: 0.75rem;
+  position: relative;
+}
+.result-body__item::after {
+  content: "*";
+  display: block;
+  font-size: 2.05rem;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 body {

@@ -1,18 +1,26 @@
-@use '../../abstract/letter-sizing';
+@use "../../abstract/compilerfile" as *;
 
-    .result-body {
-        background-color: #2C3333;
-        color: #CBE4DE;
+.result-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: .25rem;
+}
+
+.result-body {
+    &__item {
+        width: 75%;
+        margin: 0 auto;
+        padding: .75rem;
+        position: relative;
     }
 
-    .incorrect-item {
-        background-color: red;
-        color: aliceblue;
-        padding: .35rem .5rem;
+    &__item::after {
+        content: "*";
+        display: block;
+        font-size: $header;
+        position: absolute;
+        top: 0;
+        left: 0;
     }
-
-    .correct-item {
-        background-color: green;
-        color: aliceblue;
-        padding: .35rem .5rem;
-    }
+}
