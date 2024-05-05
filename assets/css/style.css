@@ -10787,20 +10787,20 @@ ul li {
 
 .quiz-title {
   text-align: center;
-  padding: 0.75rem;
-  font-size: 2.5rem;
-  font-weight: 700;
-  border-bottom: 0.05rem solid black;
+  font-size: 2.05rem;
+  padding: 0.25rem;
   max-width: max-content;
   text-wrap: wrap;
   margin: 0 auto;
   max-width: 60rem;
   line-height: 2rem;
+  text-transform: uppercase;
+  font-weight: 800;
 }
 
 main {
   --_spacer: 1rem;
-  --_height-choices: 8.5rem;
+  --_height-choices: 7.5rem;
   --_input-choice__size: 1.25rem;
   max-width: 65rem;
   height: 32.5rem;
@@ -10809,12 +10809,17 @@ main {
 }
 main .quiz-modification__container {
   margin: 1.25rem 0 0 0;
+  text-align: center;
+}
+main .quiz-modification__container .main-label {
+  font-size: 1.25rem;
 }
 main .quiz-modification__container label[for=timer], main .quiz-modification__container label[for=item] {
   display: block;
 }
 main .quiz-modification__container input[name=item], main .quiz-modification__container input[name=timer] {
-  width: 80%;
+  width: 45%;
+  margin: 0 auto;
 }
 main .topic-choices__group {
   grid-auto-columns: 100%;
@@ -10847,13 +10852,30 @@ main .topic-choices__container-sub input[type=checkbox] {
   background-color: white;
   z-index: 5;
 }
+main .topic-choices__container-sub label {
+  z-index: 5;
+}
 main .topic-choices__container-sub img {
   object-fit: cover;
   position: absolute;
   top: 0;
   width: 100%;
   height: 100%;
-  z-index: -1;
+  z-index: 1;
+}
+main .topic-choices__container-sub::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 2;
+  /* From https://css.glass */
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(1px);
 }
 @media screen and (max-width: 700px) {
   main .topic-choices__container {
@@ -10871,7 +10893,7 @@ main .difficulty-radios__container {
   display: grid;
   gap: var(--_spacer);
   grid-auto-flow: column;
-  grid-auto-columns: 31%;
+  grid-auto-columns: 30%;
   padding: 0 var(--_spacer) var(--_spacer) var(--_spacer);
   justify-content: space-around;
 }

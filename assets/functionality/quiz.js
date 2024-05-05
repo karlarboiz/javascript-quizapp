@@ -22,7 +22,7 @@ function createWelcomePage(){
     const mainBodyEl = document.createElement("main");
     //create the header
     const headerEl = document.createElement("div"); 
-    headerEl.textContent = "Welcome to Trivia Game";
+    headerEl.textContent = "Trivia Game";
     headerEl.className = "quiz-title";
     //array of category choices
     const categoriesArr = [{
@@ -89,6 +89,7 @@ function createWelcomePage(){
     //label for topic
     const topicLabelEl = document.createElement("label");
     topicLabelEl.setAttribute("for", "topic");
+    topicLabelEl.className = "main-label";
     topicLabelEl.textContent = "Topic"
 
     //select el for topic selections
@@ -127,12 +128,14 @@ function createWelcomePage(){
   
     quizModificationTopicEl.appendChild(topicCheckBoxes);
 
+   
     // This section is to generate difficulty option
 
     const quizModificationDifficultyEl =document.createElement("div");
     quizModificationDifficultyEl.className = "quiz-modification__container";
     const difficultyLabelEl = document.createElement("label");
     difficultyLabelEl.setAttribute("for", "difficulty");
+    difficultyLabelEl.className = "main-label";
     difficultyLabelEl.textContent = "Difficulty";
 
     quizModificationDifficultyEl.appendChild(difficultyLabelEl);
@@ -164,6 +167,13 @@ function createWelcomePage(){
         difficultyRadios.appendChild(difficultyRadioContainer);
     })
     quizModificationDifficultyEl.appendChild(difficultyRadios);
+    
+     //this is general modification container for both item and timer modifications
+
+     const generalItemAndTimerContainer = document.createElement("div");
+     generalItemAndTimerContainer.className ="quiz-modification__container "; 
+ 
+
     // This is for inserting item length
 
     const quizModificationItemEl = document.createElement("div");
@@ -171,6 +181,7 @@ function createWelcomePage(){
 
     const itemLabelEl = document.createElement("label");
     itemLabelEl.setAttribute("for","item");
+    itemLabelEl.className = "main-label";
     itemLabelEl.textContent = "Number of Items";
 
     const itemRangeEl = document.createElement("input");
@@ -182,6 +193,7 @@ function createWelcomePage(){
     itemRangeEl.value = modificationObject.item;
     quizModificationItemEl.appendChild(itemLabelEl);
     quizModificationItemEl.appendChild(itemRangeEl);
+    generalItemAndTimerContainer.appendChild(quizModificationItemEl);
 
     //this is for inserting timer 
 
@@ -189,6 +201,7 @@ function createWelcomePage(){
     quizModificationTimerEl.className = "quiz-modification__container";
     const timerLabelEl = document.createElement("label");
     timerLabelEl.setAttribute("for","timer");
+    timerLabelEl.className = "main-label";
     timerLabelEl.textContent = "Timer";
 
     const timerRangeEl = document.createElement("input");
@@ -203,17 +216,11 @@ function createWelcomePage(){
     quizModificationTimerEl.appendChild(timerLabelEl);
     quizModificationTimerEl.appendChild(timerRangeEl);
 
-    //this is inserting button
-
-    const quizModificationButtonEl = document.createElement("div");
-    quizModificationButtonEl.className = "quiz-modification__container";
-
-    const btnStart = document.createElement("button");
-    btnStart.setAttribute("id","btn-start");
-    btnStart.textContent = "Start Quiz";
+    generalItemAndTimerContainer.appendChild(quizModificationTimerEl);
 
 
-    quizModificationButtonEl.appendChild(btnStart);
+
+ 
 
     document.querySelector("body").append(headerEl);
 
@@ -221,11 +228,8 @@ function createWelcomePage(){
 
     quizModificationEl.appendChild(quizModificationDifficultyEl);
 
-    quizModificationEl.appendChild(quizModificationItemEl);
-
-    quizModificationEl.appendChild(quizModificationTimerEl);
-
-    quizModificationEl.appendChild(quizModificationButtonEl);
+    quizModificationEl.appendChild(generalItemAndTimerContainer);
+    // quizModificationEl.appendChild(quizModificationButtonEl);
     //append the mainbodyel
     mainBodyEl.appendChild(quizModificationEl);
 
@@ -234,10 +238,7 @@ function createWelcomePage(){
     timerRangeEl.addEventListener("input",modificationFuncHandler);
     document.querySelector("body").append(mainBodyEl);
 
-    btnStart.addEventListener("click",()=>{
-        quizData(modificationObject);
-    });
-
+   
     configRequest(modificationObject);
 }
 
@@ -273,19 +274,36 @@ function modificationFuncHandler(e) {
 function configRequest(objMod){
     const {topic:a,difficulty:b,item:c,timer:d} = objMod;
 
-    const btnStart = document.querySelector("#btn-start");
+    const quizModificationButtonEl = document.createElement("div");
+    quizModificationButtonEl.className = "quiz-modification__container quiz-modification__container-button";
 
+    const btnStart = document.createElement("button");
+    btnStart.setAttribute("id","btn-start");
+    btnStart.textContent = "Start Quiz";
+
+    quizModificationButtonEl.appendChild(btnStart);
+
+    const quizModificationButtonElTarget = document.querySelector(".quiz-modification__container-button");
     if(a === '' || b === '' || c==='' || Number(c) < 5 ||
      Number(d) ===0 || a === undefined || b === undefined) {
-
-       btnStart.disabled = true;
+        if(quizModificationButtonElTarget) {
+            quizModificationButtonElTarget.remove();
+        }
         return;
     }
 
     else if(a && b && Number(c) > 0 && Number(d) > 0){
-        btnStart.disabled = false;
+         
+        document.querySelector("main").appendChild(quizModificationButtonEl);
+        btnStart.addEventListener("click",()=>{
+            quizData(objMod);
+        });
+    
     }else {
-        btnStart.disabled = true;
+        if(quizModificationButtonElTarget) {
+            quizModificationButtonElTarget.remove();
+        }
+        return ;
     }
 }
 async function quizData(objSetup) {
