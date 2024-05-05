@@ -94,12 +94,10 @@ function createWelcomePage(){
     //select el for topic selections
   
     const topicCheckBoxes = document.createElement("div");
-    topicCheckBoxes.className = "topic-choices__container"
+    topicCheckBoxes.className = "topic-choices__container snaps-inline topic-choices__group"
     quizModificationTopicEl.appendChild(topicLabelEl);
 
     categoriesArr.forEach((val,i)=>{
-
-
         const topicCheckBoxContainer =document.createElement("div");
         topicCheckBoxContainer.className = `topic-checkbox__container-${i} topic-choices__container-sub`;
 
@@ -114,9 +112,14 @@ function createWelcomePage(){
         const topicCheckBoxLabel = document.createElement("label");
         topicCheckBoxLabel.setAttribute("for",val.value);
         topicCheckBoxLabel.textContent = val.textValue;
+
+
+        const topicCheckBoxImg = document.createElement("img");
+
+        topicCheckBoxImg.src = `assets/pictures/${val.value}.jpg`
         topicCheckBoxContainer.appendChild(topicCheckBox);
         topicCheckBoxContainer.appendChild(topicCheckBoxLabel);
-
+        topicCheckBoxContainer.appendChild(topicCheckBoxImg);
         topicCheckBoxes.appendChild(topicCheckBoxContainer);
 
 
