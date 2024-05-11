@@ -95,12 +95,12 @@ function createWelcomePage(){
     //select el for topic selections
   
     const topicCheckBoxes = document.createElement("div");
-    topicCheckBoxes.className = "topic-choices__container snaps-inline topic-choices__group"
+    topicCheckBoxes.className = "topic-choices__container-default snaps-inline topic-choices__group"
     quizModificationTopicEl.appendChild(topicLabelEl);
 
     categoriesArr.forEach((val,i)=>{
         const topicCheckBoxContainer =document.createElement("div");
-        topicCheckBoxContainer.className = `topic-checkbox__container-${i} topic-choices__container-sub`;
+        topicCheckBoxContainer.className = `topic-checkbox__container-${i} topic-choices__container-default-sub`;
 
         const topicCheckBox = document.createElement("input");
         topicCheckBox.setAttribute("type","checkbox");
@@ -245,9 +245,7 @@ function modificationFuncHandler(e) {
         if(e.target.checked) {
             topicArr.push(e.target.value);
         }else {
-
             let filteredTopicArr = topicArr.filter(val=>val!==e.target.value)
-
             topicArr = filteredTopicArr;
         }
 
