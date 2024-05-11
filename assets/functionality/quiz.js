@@ -283,10 +283,10 @@ function showErrorExceedingTopicsRequired(arr){
     if(arr.length > 5) {
         document.querySelector("body").append(errorMsg);
     }else {
-        console.log(arr.length);
-
-        console.log(errorMsg);
-        errorMsg.remove();
+      if(document.querySelector(".error-message")){
+        document.querySelector(".error-message").remove();
+      }
+       
     }
 }
 
@@ -332,9 +332,9 @@ function configRequest(objMod){
     }
 }
 async function quizData(objSetup) {
-
+    let isLoaded = false
     const {topic:topicVal,difficulty:difficultyVal,item:itemVal} = objSetup;
-
+    loadingFunctionality(isLoaded);
     try{
       let result=  await fetch(`https://the-trivia-api.com/api/questions?categories=${topicVal}&limit=${itemVal}&region=PH&difficulty=${difficultyVal}`);
 
@@ -343,6 +343,12 @@ async function quizData(objSetup) {
       }
 
       quizInfo = await result.json();
+
+      if(quizInfo.length > 0){
+        isLoaded = true;
+
+        loadingFunctionality(isLoaded);
+      }
       startGameFuncHandler(quizInfo);
     }
     catch(error) {
@@ -596,6 +602,31 @@ function changeItems(){
         mainEl.append(resultBody);  
     }
     
+}
+
+function loadingFunctionality(isLoaded){
+    
+
+    if(!isLoaded) {
+        document.querySelector("body").innerHTML = "";
+
+    const loader = document.createElement("div");
+    loader.className = "loader";
+        document.querySelector("body").append(loader);
+    }else {
+        let loaderCreated = document.querySelector(".loader");
+
+        if(loaderCreated) {
+            loaderCreated.remove();
+
+            let main = document.createElement("main");
+
+            document.querySelector("body").append(main);
+        }
+    }
+    
+
+
 }
 
 
