@@ -10890,7 +10890,7 @@ main .topic-choices__container-default-sub:hover img {
   transition: transform 0.08s ease-out;
 }
 @media screen and (max-width: 700px) {
-  main .topic-choices__container {
+  main .topic-choices__container-default {
     grid-auto-columns: 50%;
   }
 }

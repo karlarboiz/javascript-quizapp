@@ -127,7 +127,7 @@ main {
     }
 
     @media screen and (max-width: 700px){
-        .topic-choices__container {
+        .topic-choices__container-default {
             grid-auto-columns: 50%;
         }
     }
