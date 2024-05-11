@@ -285,9 +285,19 @@ function showErrorExceedingTopicsRequired(arr){
     }else {
       if(document.querySelector(".error-message")){
         document.querySelector(".error-message").remove();
-      }
-       
+      }  
     }
+}
+
+function showErrorDuringFailedFetch(){
+    const errorMsg = document.createElement("div");
+
+    errorMsg.className = "error-message";
+    
+    errorMsg.textContent = "Something went wrong! Please try again.";
+
+    document.querySelector("body").append(errorMsg);
+
 }
 
 function configRequest(objMod){
@@ -331,6 +341,8 @@ function configRequest(objMod){
         return ;
     }
 }
+
+
 async function quizData(objSetup) {
     let isLoaded = false
     const {topic:topicVal,difficulty:difficultyVal,item:itemVal} = objSetup;
@@ -352,7 +364,7 @@ async function quizData(objSetup) {
       startGameFuncHandler(quizInfo);
     }
     catch(error) {
-
+        showErrorDuringFailedFetch();
     }
   
 }
@@ -472,7 +484,7 @@ function createQuizItem(arrItem,i) {
        
     })
 
-    quizTimer(answeredItemObj,resultItemArray,cloneTimerValue);
+    //quizTimer(answeredItemObj,resultItemArray,cloneTimerValue);
     
     quizItemsWrapper.appendChild(quizItemEl);
     
@@ -606,12 +618,11 @@ function changeItems(){
 
 function loadingFunctionality(isLoaded){
     
-
     if(!isLoaded) {
         document.querySelector("body").innerHTML = "";
 
-    const loader = document.createElement("div");
-    loader.className = "loader";
+        const loader = document.createElement("div");
+        loader.className = "loader";
         document.querySelector("body").append(loader);
     }else {
         let loaderCreated = document.querySelector(".loader");
@@ -625,8 +636,6 @@ function loadingFunctionality(isLoaded){
         }
     }
     
-
-
 }
 
 
