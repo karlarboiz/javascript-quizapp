@@ -242,15 +242,23 @@ function modificationFuncHandler(e) {
     
     if(e.target.name === 'topic') {
         let topicsSummed = "";
+
+        
         if(e.target.checked) {
             topicArr.push(e.target.value);
+            e.target.parentElement.className = "topic-choices__container-default-active";
+
+           
         }else {
             let filteredTopicArr = topicArr.filter(val=>val!==e.target.value)
             topicArr = filteredTopicArr;
+
+            e.target.parentElement.className = "topic-choices__container-default-sub"
         }
 
         topicsSummed+= topicArr.join(",");
         
+        showErrorExceedingTopicsRequired(topicArr);
         modificationObject.topic = (topicArr.length <= 5)? topicsSummed: "";
     }else if(e.target.name === 'difficulty') {
         modificationObject.difficulty = e.target.value
@@ -263,6 +271,23 @@ function modificationFuncHandler(e) {
     }
     //    confirmingToStart(e.target.value);
     configRequest(modificationObject);
+}
+
+function showErrorExceedingTopicsRequired(arr){
+    const errorMsg = document.createElement("div");
+
+    errorMsg.className = "error-message";
+    
+    errorMsg.textContent = "Choose up to 5 topics only!";
+
+    if(arr.length > 5) {
+        document.querySelector("body").append(errorMsg);
+    }else {
+        console.log(arr.length);
+
+        console.log(errorMsg);
+        errorMsg.remove();
+    }
 }
 
 function configRequest(objMod){

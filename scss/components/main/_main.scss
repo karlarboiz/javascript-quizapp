@@ -25,10 +25,11 @@ main {
     margin: 1.5rem auto 0 auto;
 
     .quiz-modification__container {
-        margin: 1.25rem 0 0 0;
+        margin: .95rem 0 0 0;
         text-align: center;
         .main-label {
             font-size: $subheader;
+            text-transform: uppercase;
         }
         label[for="timer"],label[for="item"] {
             display: block;
@@ -43,84 +44,134 @@ main {
     .topic-choices__group {
         grid-auto-columns: 100%;
     } 
-    .topic-choices__container-default {
-        display: grid;
-        gap: var(--_spacer);
-        grid-auto-flow: column;
-        grid-auto-columns: 25%;
-        overflow-x: auto;
-        overscroll-behavior-inline: contain;
-        padding: 0 var(--_spacer) var(--_spacer) var(--_spacer);
-    
-        &-sub {
-            padding: .75rem;
-            height: var(--_height-choices);
-            min-height: var(--_height-choices);
+    .topic-choices__container{
 
-            border-radius: var(--_radius-common);
-
+        &-default {
             display: grid;
             gap: var(--_spacer);
             grid-auto-flow: column;
-            position: relative;
-            align-items: center;
-            justify-content: center; 
-           
-            
-            input[type="checkbox"]{
-          
-                width: var(--_input-choice__size);
-                height: var(--_input-choice__size);
-                background-color: white;
-                z-index: 5;
+            grid-auto-columns: 25%;
+            overflow-x: auto;
+            overscroll-behavior-inline: contain;
+            padding: 0 var(--_spacer) var(--_spacer) var(--_spacer);
+        
+            &-sub {
+                padding: .75rem;
+                height: var(--_height-choices);
+                min-height: var(--_height-choices);
+                border-radius: var(--_radius-common);
+    
+                display: grid;
+                gap: var(--_spacer);
+                grid-auto-flow: column;
+                position: relative;
+                align-items: center;
+                justify-content: center; 
+                position: relative;
+                
+                input[type="checkbox"]{
+              
+                    width: var(--_input-choice__size);
+                    height: var(--_input-choice__size);
+                    background-color: white;
+                    z-index: 5;
+                }
+    
+                label {
+                    z-index: 5;
+                }
+    
+                img {
+                    object-fit: cover;
+                    position: absolute;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 1;
+                    border-radius: var(--_radius-common);
+    
+                    transform: scale(1, 1);
+                    transition: transform  .08s ease-in;
+                }   
             }
-
-            label {
-                z-index: 5;
-            }
-            img {
-                object-fit: cover;
+    
+    
+            &-sub::before {
+                content: "";
+                display: block;
                 position: absolute;
                 top: 0;
-                width: 100%;
-                height: 100%;
-                z-index: 1;
+                left: 0;
                 border-radius: var(--_radius-common);
-
-                transform: scale(1, 1);
-                transition: transform  .08s ease-in;
-            }   
-        }
-
-
-        &-sub::before {
-            content: "";
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            border-radius: var(--_radius-common);
-
-            height: 100%;
-            width: 100%;
     
-            z-index: 2;
-            background: rgba(255, 255, 255, 0.2);   
-            backdrop-filter: blur(2px);
-            -webkit-backdrop-filter: blur(1px);
-   
+                height: 100%;
+                width: 100%;
+        
+                z-index: 2;
+                background-color: rgba(255, 255, 255, 0.2);   
+                backdrop-filter: blur(2px);
+                -webkit-backdrop-filter: blur(2px);
+                transition: backdrop-filter .05s ease-in,
+                background-color .05s ease-in;
+            }
+    
+            &-sub:hover::before {
+                backdrop-filter: blur(0px);
+                -webkit-backdrop-filter: blur(0px);
+                background-color: unset;  
+                transition: backdrop-filter .04s ease-in-out,
+                background-color .05s ease-in;
+    
+            }
+    
+            &-sub:hover img {
+                transform: scale(1.05, 1.05);
+                transition: transform .08s ease-in-out;
+            }
 
-            transition: height .05s ease-in;
-        }
-
-        &-sub:hover::before {
-            height: 0%;
-            transition: height .05s ease-out;
-        }
-
-        &-sub:hover img {
-            transform: scale(1.05, 1.05);
-            transition: transform .08s ease-out;
+            &-active {
+                padding: .75rem;
+                height: var(--_height-choices);
+                min-height: var(--_height-choices);
+                border-radius: var(--_radius-common);
+    
+                display: grid;
+                gap: var(--_spacer);
+                grid-auto-flow: column;
+                position: relative;
+                align-items: center;
+                justify-content: center; 
+                position: relative;
+                
+                input[type="checkbox"]{
+              
+                    width: var(--_input-choice__size);
+                    height: var(--_input-choice__size);
+                    background-color: white;
+                    z-index: 5;
+                }
+    
+                label {
+                    color: yellow;
+                    font-size: $highlighted;
+                    z-index: 5;
+                    transition: color .05s ease-in,
+                    font-size .05s ease-in;
+                }
+    
+                img {
+                    object-fit: cover;
+                    position: absolute;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 1;
+                    border-radius: var(--_radius-common);
+    
+                    transform: scale(1.05, 1.05);
+                    transition: transform  .08s ease-in;
+                }   
+            }
         }
 
       
@@ -165,5 +216,18 @@ main {
             }
         }
     }
+}
+
+
+.error-message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    text-align: center;
+    padding: .5rem 0;
+    background-color: black;
+    color:red;
 }
 
