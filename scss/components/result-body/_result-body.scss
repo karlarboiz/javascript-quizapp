@@ -9,20 +9,21 @@
 
 .result-body {
     --_spacing: .5rem;
+    --_content-spacing: 1.25rem;
     &__item {
         width: 75%;
         margin: var(--_spacing) auto;
-        padding: .75rem;
+        padding: var(--_content-spacing);
         position: relative;
         border-radius: var(--_spacing);
+
+        svg {
+            display: block;
+            font-size: $header;
+            position: absolute;
+            top: calc(var(--_spacing) + var(--_spacing) * .02);
+            left: calc(var(--_spacing) - var(--_spacing) * 1.5);
+        }
     }
 
-    &__item::after {
-        content: "*";
-        display: block;
-        font-size: $header;
-        position: absolute;
-        top: calc(var(--_spacing) + var(--_spacing) * .02);
-        left: calc(var(--_spacing) - var(--_spacing) * 1.5);
-    }
 }
