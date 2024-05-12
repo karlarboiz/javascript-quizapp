@@ -484,14 +484,16 @@ function createQuizItem(arrItem,i) {
 
         quizAnswerItem.appendChild(quizAnswerItemIconSpan);
         quizAnswerItem.addEventListener("click",(e)=>{
+          
+     
             document.querySelectorAll(".quiz-answers__item").forEach(quizVal=>{
                 quizVal.classList.remove("quiz-answers__item-active");
             })
             e.target.classList.add("quiz-answers__item-active");
           
             answeredItemObj.loggedTime = Math.floor(new Date().getTime());
-            console.log(e.target.textContent)
             selectAnswerFunc(answeredItemObj,arrItem,resultItemArray,e.target.textContent);
+            
         
         })
         
@@ -535,26 +537,28 @@ function quizTimer(obj,arr,timeCount){
 
 
 function selectAnswerFunc(obj,arr,resultArr,playerAnswer){
-   
+
     let answeredItem = resultArr.filter(val=>val?.id === i+1);
+   
     obj.id = i + 1;
     obj.question = arr.question
-    obj.isCorrect = playerAnswer === arr.correctAnswer;
-    obj.myAnswer = playerAnswer;
+    obj.isCorrect = playerAnswer.trim() === arr.correctAnswer;
+    obj.myAnswer = playerAnswer.trim();
     obj.correctAnswer =  arr.correctAnswer;
 
     if(!answeredItem){
-        
+
         resultArr.push(obj)
         
     }else {
         answeredItem.isCorrect = playerAnswer === arr.correctAnswer;
-        answeredItem.myAnswer = playerAnswer;
+        answeredItem.myAnswer = playerAnswer.trim();
         answeredItem.correctAnswer = arr.correctAnswer;
 
         arr[answeredItem?.id] = answeredItem;
 
     }
+
 }
 
 function changeItems(){

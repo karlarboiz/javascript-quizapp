@@ -8,11 +8,13 @@
 }
 
 .result-body {
+    --_spacing: .5rem;
     &__item {
         width: 75%;
-        margin: 0 auto;
+        margin: var(--_spacing) auto;
         padding: .75rem;
         position: relative;
+        border-radius: var(--_spacing);
     }
 
     &__item::after {
@@ -20,7 +22,7 @@
         display: block;
         font-size: $header;
         position: absolute;
-        top: 0;
-        left: 0;
+        top: calc(var(--_spacing) + var(--_spacing) * .02);
+        left: calc(var(--_spacing) - var(--_spacing) * 1.5);
     }
 }
