@@ -269,7 +269,6 @@ function modificationFuncHandler(e) {
         modificationObject.timer = e.target.value
         timerCount = Number(e.target.value)
     }
-    //    confirmingToStart(e.target.value);
     configRequest(modificationObject);
 }
 
@@ -466,15 +465,32 @@ function createQuizItem(arrItem,i) {
     answeredItemObj.correctAnswer = arrItem.correctAnswer;
     answeredItemObj.loggedTime = 0;
     answeredItemObj.category = arrItem.category;
-    answerSet.forEach(val=>{
+    answerSet.forEach((val,index,orgArr)=>{
         const quizAnswerItem = document.createElement("div");
         
         quizAnswerItem.className = "quiz-answers__item";
-        quizAnswerItem.textContent = val;
+        quizAnswerItem.textContent = val;   
 
+        const quizAnswerItemIconSpan = document.createElement("span");
+
+        const quizAnswerItemIconText = `
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-record-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+            <path d="M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+        </svg>
+        `
+
+        quizAnswerItemIconSpan.innerHTML = quizAnswerItemIconText;
+
+        quizAnswerItem.appendChild(quizAnswerItemIconSpan);
         quizAnswerItem.addEventListener("click",(e)=>{
-        
+            document.querySelectorAll(".quiz-answers__item").forEach(quizVal=>{
+                quizVal.classList.remove("quiz-answers__item-active");
+            })
+            e.target.classList.add("quiz-answers__item-active");
+          
             answeredItemObj.loggedTime = Math.floor(new Date().getTime());
+            console.log(e.target.textContent)
             selectAnswerFunc(answeredItemObj,arrItem,resultItemArray,e.target.textContent);
         
         })
@@ -484,7 +500,7 @@ function createQuizItem(arrItem,i) {
        
     })
 
-    //quizTimer(answeredItemObj,resultItemArray,cloneTimerValue);
+    quizTimer(answeredItemObj,resultItemArray,cloneTimerValue);
     
     quizItemsWrapper.appendChild(quizItemEl);
     

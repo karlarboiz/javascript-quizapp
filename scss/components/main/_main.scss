@@ -23,6 +23,9 @@ main {
     height: 32.5rem;
     min-height:32.5rem;
     margin: 1.5rem auto 0 auto;
+    transform: translateY(0rem);
+    transform-origin: bottom;
+    transition: transform .25s ease-out;
 
     .quiz-modification__container {
         margin: .95rem 0 0 0;
@@ -154,9 +157,11 @@ main {
                 label {
                     color: yellow;
                     font-size: $highlighted;
+                    font-weight: 600;
                     z-index: 5;
                     transition: color .05s ease-in,
-                    font-size .05s ease-in;
+                    font-size .05s ease-in,
+                    font-weight .05s ease-in;
                 }
     
                 img {
@@ -254,5 +259,9 @@ main {
   @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+  }
+
+  svg {
+    width: $common;
   }
 
