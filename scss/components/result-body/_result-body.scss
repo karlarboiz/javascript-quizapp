@@ -18,8 +18,6 @@
         border-radius: var(--_spacing);
 
         svg {
-            display: block;
-            font-size: $header;
             position: absolute;
             top: calc(var(--_spacing) + var(--_spacing) * .02);
             left: calc(var(--_spacing) - var(--_spacing) * 1.5);

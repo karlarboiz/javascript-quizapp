@@ -11117,8 +11117,6 @@ svg {
   border-radius: var(--_spacing);
 }
 .result-body__item svg {
-  display: block;
-  font-size: 2.05rem;
   position: absolute;
   top: calc(var(--_spacing) + var(--_spacing) * 0.02);
   left: calc(var(--_spacing) - var(--_spacing) * 1.5);
